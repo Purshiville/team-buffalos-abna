@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Buffalos — ABNA Worksite List</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap');
+  :root {
+    --navy: #0d1f3c; --gold: #c9922a; --gold-light: #f5d98b;
+    --cream: #faf8f3; --white: #ffffff; --mid: #e8e4db;
+    --text: #1a1a2e; --muted: #6b7280; --accent: #1b4f8a;
+    --green: #065f46; --green-bg: #ecfdf5;
+    --amber: #92400e; --amber-bg: #fffbeb;
+    --blue: #1e3a5f; --blue-bg: #eff6ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Source Sans 3', sans-serif; background: var(--cream); color: var(--text); font-size: 14px; line-height: 1.6; }
+
+  .cover { background: var(--navy); color: var(--white); padding: 60px 40px; text-align: center; }
+  .cover-badge { background: var(--gold); color: var(--navy); font-weight: 700; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; padding: 6px 20px; border-radius: 2px; margin-bottom: 32px; display: inline-block; }
+  .cover h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; margin-bottom: 12px; }
+  .cover h1 span { color: var(--gold); }
+  .cover p { color: rgba(255,255,255,0.65); font-size: 1rem; max-width: 560px; margin: 0 auto 32px; }
+  .cover-rule { width: 60px; height: 3px; background: var(--gold); margin: 0 auto 32px; }
+  .stats { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--gold); }
+  .stat-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
+
+  .page { max-width: 1100px; margin: 0 auto; padding: 40px 32px; }
+
+  .callout { border-radius: 8px; padding: 16px 20px; margin: 20px 0; font-size: 0.9rem; }
+  .callout-info { background: var(--blue-bg); border-left: 4px solid var(--accent); }
+  .callout-warn { background: var(--amber-bg); border-left: 4px solid var(--gold); }
+  .callout-title { font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .callout-info .callout-title { color: var(--accent); }
+  .callout-warn .callout-title { color: var(--amber); }
+
+  .section-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--navy); margin: 36px 0 8px; padding-bottom: 8px; border-bottom: 2px solid var(--gold); display: inline-block; }
+
+  /* Search */
+  .search-bar { background: white; border: 2px solid var(--mid); border-radius: 8px; padding: 12px 16px; font-size: 1rem; width: 100%; max-width: 500px; margin: 20px 0; color: var(--text); outline: none; }
+  .search-bar:focus { border-color: var(--gold); }
+
+  /* Badges */
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px; }
+  .badge-qlink { background: var(--green-bg); color: var(--green); }
+  .badge-sto { background: var(--amber-bg); color: var(--amber); }
+  .badge-do { background: var(--blue-bg); color: var(--blue); }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; margin: 16px 0 32px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+  table { width: 100%; border-collapse: collapse; background: white; font-size: 0.83rem; }
+  thead tr { background: var(--navy); color: white; }
+  thead th { padding: 10px 12px; text-align: left; font-size: 0.73rem; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
+  tbody tr:nth-child(even) { background: #f8f9fc; }
+  tbody tr:hover { background: #eef3fb; }
+  tbody td { padding: 8px 12px; border-bottom: 1px solid var(--mid); vertical-align: middle; }
+  tbody td:first-child { font-family: monospace; font-size: 0.78rem; color: var(--muted); }
+  tbody td:nth-child(2) { font-weight: 600; color: var(--navy); }
+  .hidden { display: none; }
+
+  .back-link { display: inline-block; margin: 24px 0 0; color: var(--accent); text-decoration: none; font-size: 0.9rem; }
+  .back-link:hover { color: var(--gold); }
+  footer { text-align: center; padding: 32px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--mid); margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-badge">Team Buffalos — Internal Resource</div>
+  <div class="cover-rule"></div>
+  <h1>ABNA <span>Worksite List</span></h1>
+  <p>All Sanlam-approved stop order facilities. Use this list to identify where you can write stop order business and what submission requirements apply.</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-num" id="count-qlink">–</div><div class="stat-label">Qlink Facilities</div></div>
+    <div class="stat"><div class="stat-num" id="count-sto">–</div><div class="stat-label">STO Mandate Facilities</div></div>
+    <div class="stat"><div class="stat-num" id="count-do">–</div><div class="stat-label">DO Restricted</div></div>
+    <div class="stat"><div class="stat-num" id="count-total">–</div><div class="stat-label">Total Worksites</div></div>
+  </div>
+</div>
+
+<div class="page">
+
+  <a href="izulu_advisor_guide.html" class="back-link">← Back to Guide</a>
+
+  <div class="callout callout-info" style="margin-top:24px;">
+    <div class="callout-title">How to Use This List</div>
+    Use the search box to find a specific facility or employer. The <strong>NB Requirements</strong> column tells you exactly what submission method applies. INF = currently In Force policies at that facility. OOF = Out of Force (lapsed). High INF counts indicate active, high-density worksites — prioritise these.
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-title">⚠️ Submission Requirements</div>
+    <strong>Qlink / BilliE</strong> — No physical lodgement required. Submit via Qlink as normal.<br>
+    <strong>STO Mandate &amp; Payslip</strong> — Physical stop order mandate and payslip required. Lodgement must be confirmed with a counter-signed STO mandate or stamp and signed STO letter from the facility.<br>
+    <strong>DO Collection (Worksite Restricted)</strong> — Debit order collection only at these facilities. Stop order is not available.
+  </div>
+
+  <input type="text" class="search-bar" id="searchInput" placeholder="🔍  Search by facility name or code..." onkeyup="filterTable()">
+
+  <div id="count-display" style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;"></div>
+
+
+  <h2 class="section-title">Section 1 — Qlink / BilliE Facilities <span style="font-size:0.8rem;font-family:sans-serif;color:var(--muted);">(132 facilities)</span></h2>
+  <p style="color:var(--muted);font-size:0.88rem;margin-bottom:12px;">No physical lodgement required. Submit via Qlink or BilliE as indicated. Mostly government and parastatal institutions.</p>
+  <div class="table-wrap">
+    <table id="table-qlink" class="abna-table">
+      <thead><tr><th>Facility Code</th><th>Facility Name</th><th>INF Policies</th><th>OOF Policies</th><th>Submission Method</th></tr></thead>
+      <tbody>
+<tr><td>AL1P80492</td><td>ADMIN AND AUXIL EASTERN CAPE</td><td>1</td><td>3</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80202</td><td>AGRIC AND LAND AFF EASTERN CAPE</td><td>51</td><td>62</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P35702</td><td>BORBET SA PTY - SALARY</td><td>934</td><td>539</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P25422</td><td>BORBET SA PTY - WAGES</td><td>46</td><td>18</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P27182</td><td>CENTRE FOR PUBLIC SERVICE INNOVATION</td><td>7</td><td>1</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P49372</td><td>CITY OF TSHWANE - SAMWU</td><td>219</td><td>103</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P70392</td><td>CITY OF TSHWANE ~ RA</td><td>168</td><td>1413</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P87762</td><td>DEPARTMENT ARTS AND CULTURE</td><td>56</td><td>60</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80002</td><td>DEPARTMENT HOUSING AND WATER</td><td>7</td><td>10</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P24492</td><td>DEPARTMENT OF GAUTENG HOUSING</td><td>8</td><td>3</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P24502</td><td>DEPARTMENT OF MILITARY VETERANS (74)</td><td>17</td><td>15</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P25972</td><td>Department of Traditional Affairs</td><td>219</td><td>57</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80482</td><td>ECON AFFAIRS ~ EASTERN CAPE</td><td>1</td><td>2</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P87912</td><td>ECONOMIC AFFAIRS ~ MPUMALANGA</td><td>2</td><td>1</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80252</td><td>ECONOMIC AFFAIRS COM</td><td>7</td><td>1</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80402</td><td>EDUCATION ~ EASTERN CAPE</td><td>338</td><td>501</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80122</td><td>EDUCATION DEPT</td><td>20977</td><td>8013</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P81132</td><td>EDUCATION TRAINING DEPT</td><td>10</td><td>77</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P88312</td><td>ENVIR CULTURE AND SPORT WEST CAPE</td><td>24</td><td>12</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P70062</td><td>ESKOM ~ BLOEMFONTEIN</td><td>865</td><td>569</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P71592</td><td>ESKOM ~ CAPE TOWN</td><td>486</td><td>316</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P79772</td><td>ESKOM ~ DURBAN</td><td>2455</td><td>1630</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P79762</td><td>ESKOM ~ EAST LONDON</td><td>1285</td><td>759</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P72882</td><td>ESKOM ~ GENERATIONS</td><td>1265</td><td>722</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P74582</td><td>ESKOM ~ JOHANNESBURG</td><td>2793</td><td>1566</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P74832</td><td>ESKOM ~ MATIMBA</td><td>90</td><td>14</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P74532</td><td>ESKOM ~ MEGAWATT PARK</td><td>1262</td><td>569</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P71272</td><td>ESKOM ~ PRETORIA</td><td>686</td><td>370</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P74102</td><td>ESKOM ~ TRANSMISSION</td><td>373</td><td>237</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P73842</td><td>ESKOM PENSION AND PROV MEGAWATT</td><td>39</td><td>119</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P72372</td><td>EXEC DEP PRESIDENT</td><td>0</td><td>0</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80112</td><td>EXEC DEP PRESIDENT</td><td>2</td><td>2</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P79212</td><td>EZEMVELO KZN WILDLIFE</td><td>1259</td><td>1539</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P80502</td><td>FINANCE ~ EASTERN CAPE</td><td>1</td><td>208</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P20692</td><td>Gauteng Health</td><td>901</td><td>420</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P20672</td><td>Gauteng Local Government</td><td>2</td><td>10</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P20682</td><td>Gauteng Treasury</td><td>11</td><td>2</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80102</td><td>GOV DEPT GAZANKULU</td><td>5</td><td>18</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80412</td><td>HEALTH AND WELFARE EASTERN CAPE</td><td>109</td><td>118</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P70722</td><td>IEMAS ~ CENTURION</td><td>3624</td><td>3020</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P71772</td><td>IMATU ~ BRAAMFONTEIN</td><td>1165</td><td>1518</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P67012</td><td>JOHANNESBURG HOSPITAL</td><td>176</td><td>289</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P43142</td><td>JOHANNNESBURG WATER</td><td>36</td><td>206</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P22932</td><td>KING SABATA DALINDYEBO PUBLIC FET COLLEGE</td><td>8</td><td>168</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P87922</td><td>LOCAL GOV AND TRAFFIC MPUMALANGA</td><td>14</td><td>8</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80432</td><td>LOCAL GOV OLD EASTERN CAPE</td><td>2</td><td>77</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P71962</td><td>MANGAUNG MUNICIPALITY</td><td>3707</td><td>4894</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P30012</td><td>MOTORVIA 1993 GAUTENG</td><td>185</td><td>237</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P88792</td><td>MPUMALANGA SOCIAL ASSISTANCE</td><td>61</td><td>51</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P28492</td><td>MUNICIPAL INFRASTRUCTURE SUPPORT AGENCY (92)</td><td>0</td><td>0</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P71652</td><td>NALEDI LOCAL MUNICIPALITY - DEWETSDORP</td><td>51</td><td>187</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P88402</td><td>NATIONAL HEALTH LAB SERVICES</td><td>16</td><td>19</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P44982</td><td>NATIONAL PORT AUTH ~ CAPETOWN</td><td>18</td><td>47</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P44992</td><td>NATIONAL PORT AUTH ~ COR H/O</td><td>1</td><td>3</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45352</td><td>NATIONAL PORT AUTH ~ DREDGING SE</td><td>3</td><td>10</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45362</td><td>NATIONAL PORT AUTH ~ DURBAN</td><td>72</td><td>218</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45342</td><td>NATIONAL PORT AUTH ~ EAST LONDON</td><td>0</td><td>10</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45502</td><td>NATIONAL PORT AUTH ~ LIGHTHOUSE S</td><td>2</td><td>11</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45292</td><td>NATIONAL PORT AUTH ~ PE</td><td>15</td><td>37</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45422</td><td>NATIONAL PORT AUTH ~ RICHARDSBAY</td><td>18</td><td>39</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P44962</td><td>NATIONAL PORT AUTH ~ SALDANHA</td><td>2</td><td>9</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P73822</td><td>NELSON MANDELA METRO MUNICIPALITY</td><td>6944</td><td>6954</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P80442</td><td>OFFICE PREMIER ~ EASTERN CAPE</td><td>26</td><td>33</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P87642</td><td>PARLIAMENT OF SOUTH AFRICA</td><td>584</td><td>391</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P73412</td><td>PETRONET DURBAN</td><td>4</td><td>17</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P24322</td><td>PORT ELIZABETH COLLEGE</td><td>0</td><td>51</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P87612</td><td>PRASA / METRO-RAIL</td><td>9928</td><td>5077</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P27862</td><td>PROPERTY MANAGEMENT TRADING ENTITY (M5)</td><td>110</td><td>16</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P82702</td><td>PROV ADMIN ~ FREE STATE</td><td>463</td><td>560</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P61652</td><td>PROV ADMIN ~ KZN</td><td>2867</td><td>3851</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P71032</td><td>PROV ADMIN ~ NORTHERN CAPE</td><td>89</td><td>128</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P71262</td><td>PROV ADMIN ~ WESTERN CAPE</td><td>17</td><td>42</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P85332</td><td>PROV DEPT BOPH ~ NORTH WEST</td><td>6</td><td>35</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80572</td><td>PROV GOV ~ EASTERN CAPE</td><td>1572</td><td>2207</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P83142</td><td>PROV GOV VENDA ~ NORTH WEST</td><td>2</td><td>4</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P72572</td><td>PROV GOVERNMENT ~ GAUTENG</td><td>187</td><td>330</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80162</td><td>PROV GOVT ~ NORTH WEST</td><td>5544</td><td>12331</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P87752</td><td>PROV LEGISLATURE ~ MPUMALANGA</td><td>3</td><td>10</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P88052</td><td>PROV LEGISLATURE ~ NORTH CAPE</td><td>30</td><td>13</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80182</td><td>PROVINCIAL GOV ~ MPUMALANGA</td><td>93</td><td>201</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P87952</td><td>PUB WORK ROAD AND TRAN MPUMALANGA</td><td>477</td><td>557</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80462</td><td>PUPLIC WORKS ~ EASTERN CAPE</td><td>29</td><td>35</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P21322</td><td>ROAD TRAFFIC MANAGEMENT CORPORATION</td><td>34</td><td>28</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P83942</td><td>S A NATIONAL DEFENCE FORCE</td><td>19887</td><td>22772</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45432</td><td>SA PORT MULTI PURPOSE TERMINAL</td><td>102</td><td>209</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P44942</td><td>SA PORT OP ~ CAPE CONTAINER TERM</td><td>9</td><td>29</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45032</td><td>SA PORT OP ~ CAPE MPT</td><td>17</td><td>34</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45452</td><td>SA PORT OP ~ CORPORATE H/O</td><td>2</td><td>3</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45492</td><td>SA PORT OP ~ DBN -CONT.TERM.</td><td>119</td><td>286</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45412</td><td>SA PORT OP ~ DBN MAYDON WHARF</td><td>7</td><td>51</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45402</td><td>SA PORT OP ~ DURBAN CAR TERM</td><td>5</td><td>6</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45392</td><td>SA PORT OP ~ DURBAN MPT</td><td>49</td><td>219</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45322</td><td>SA PORT OP ~ EAST LONDON MPT</td><td>1</td><td>13</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45272</td><td>SA PORT OP ~ PE CONTAINER TERM</td><td>17</td><td>49</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45262</td><td>SA PORT OP ~ PORT ELIZ MPT</td><td>6</td><td>23</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45442</td><td>SA PORT OP ~ R/BAY DRY BULK TERM</td><td>55</td><td>170</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P44952</td><td>SA PORT OP ~ SALDANHA IOT</td><td>6</td><td>23</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P45252</td><td>SA PORT OP ~ SALDANHA MPT</td><td>1</td><td>4</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P83452</td><td>SA POST OFFICE</td><td>7564</td><td>7835</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P88902</td><td>SA SOCIAL SECURITY AGENCY PRETORIA</td><td>33</td><td>88</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P44382</td><td>SAA ~ CORPORATE</td><td>622</td><td>475</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P44372</td><td>SAA ~ TECHNICAL</td><td>5</td><td>44</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P79802</td><td>SAMWU ~ CITY POWER</td><td>37</td><td>117</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P46742</td><td>SAMWU ~ EGSC</td><td>38</td><td>51</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P41322</td><td>SAMWU ~ JHB CITY PARKS</td><td>111</td><td>247</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P41332</td><td>SAMWU ~ JHB METRO BUS</td><td>12</td><td>31</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P49512</td><td>SAMWU ~ JHB ROADS AGENCY</td><td>266</td><td>414</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P75222</td><td>SAMWU ~ JOHANNESBURG</td><td>3234</td><td>4305</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80512</td><td>SARS</td><td>130</td><td>234</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P20272</td><td>SASSA</td><td>6354</td><td>5416</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P88222</td><td>SHARED SERVICE CENTRE ~ GAUTENG</td><td>50</td><td>54</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P40132</td><td>Sky Admin Staff S.A.P.</td><td>1572</td><td>1107</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P40152</td><td>SKY Sales Psiber</td><td>7398</td><td>10166</td><td><span class="badge badge-qlink">BilliE</span></td></tr>
+<tr><td>AL1P26812</td><td>SMALL BUSINESS DEVELOPMENT</td><td>13</td><td>4</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P88862</td><td>SOCIAL ASSISTANCE ~ EASTERN CAPE</td><td>55</td><td>40</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P88882</td><td>SOCIAL ASSISTANCE ~ FREE STATE</td><td>6</td><td>12</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P88842</td><td>SOCIAL ASSISTANCE ~ GAUTENG</td><td>74</td><td>17</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P88872</td><td>SOCIAL ASSISTANCE ~ KZN</td><td>90</td><td>61</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P88852</td><td>SOCIAL ASSISTANCE ~ MPUMALANGA</td><td>30</td><td>20</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P88802</td><td>SOCIAL ASSISTANCE ~ NORTH CAPE</td><td>40</td><td>15</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P88782</td><td>SOCIAL ASSISTANCE ~ WEST CAPE</td><td>26</td><td>13</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P87972</td><td>SOCIAL SERV POP DEV ~ MPUMALANGA</td><td>115</td><td>94</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P88832</td><td>SOUTH AFRICAN SOCIAL SECURITY AGE</td><td>292</td><td>427</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80302</td><td>SPOORNET</td><td>1178</td><td>2625</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80072</td><td>STATE EXPENDITURE DEPT</td><td>0</td><td>1</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P84272</td><td>TELKOM S A FINANSIALE REKENINGE</td><td>1213</td><td>2453</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P43642</td><td>TRANSNET - GROUP</td><td>228</td><td>125</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P21022</td><td>TRANSNET NATIONAL</td><td>340</td><td>304</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80452</td><td>TRANSPORT OLD EASTERN CAPE</td><td>3</td><td>11</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P80042</td><td>TRANSWERK</td><td>406</td><td>905</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P26562</td><td>WATER AND SANITATION</td><td>481</td><td>550</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+<tr><td>AL1P87732</td><td>YOUTH COMMISSION</td><td>2</td><td>5</td><td><span class="badge badge-qlink">Qlink</span></td></tr>
+</tbody></table></div>
+
+  <h2 class="section-title">Section 2 — STO Mandate &amp; Payslip Required <span style="font-size:0.8rem;font-family:sans-serif;color:var(--muted);">(municipalities, private companies)</span></h2>
+  <p style="color:var(--muted);font-size:0.88rem;margin-bottom:12px;">Physical stop order mandate and payslip required. Lodgement must be confirmed with a counter-signed STO mandate or stamp and signed STO letter from the facility.</p>
+  <div class="table-wrap">
+    <table id="table-sto" class="abna-table">
+      <thead><tr><th>Facility Code</th><th>Facility Name</th><th>INF Policies</th><th>OOF Policies</th><th>Submission</th></tr></thead>
+      <tbody>
+<tr><td>AL1P40682</td><td>ABAQULUSI MUNICIPALITY</td><td>526</td><td>393</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P30652</td><td>ABERDARE ~ POWER DIV KORSTEN (PORT ELIZABETH)</td><td>270</td><td>99</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P28562</td><td>ADDO BRICKS PTY LTD</td><td>12</td><td>0</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P35722</td><td>AFLIFE ~ PENSIONERS</td><td>4</td><td>24</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P34642</td><td>AFRICAN PROD - GERMISTON</td><td>2</td><td>11</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P41602</td><td>AFRICAN PROD ~ MEYERTON</td><td>3</td><td>3</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P48552</td><td>AFRICAN PROD ISANDO HEAD OFFICE</td><td>2</td><td>4</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P79672</td><td>AFRI-GUARD PTY LTD</td><td>685</td><td>1077</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P49762</td><td>AFRIPAK PTY LTD</td><td>6</td><td>12</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P38252</td><td>AFRIT PTY LTD</td><td>37</td><td>298</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73642</td><td>AIRPORTS CO - CAPE TOWN INT</td><td>9</td><td>7</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P39522</td><td>AIRPORTS CO ~ DURBAN INT</td><td>3</td><td>25</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20412</td><td>ALBERT LUTHULI MUNICIPALITY</td><td>177</td><td>152</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70472</td><td>ALFRED DUMA LOCAL MUNICIPALITY</td><td>11</td><td>18</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P42902</td><td>ALFRED NZO DISTRICT MUNICIPALITY</td><td>1512</td><td>947</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71902</td><td>AMAFA AKZN</td><td>12</td><td>35</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71042</td><td>AMAHLATI MUNICIPALITY</td><td>493</td><td>436</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P42452</td><td>AMAJUBA DISTRICT MUNICIPALITY</td><td>279</td><td>154</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P46172</td><td>AMATOLE DISTRICT MUNICIPALITY</td><td>2592</td><td>2548</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P24552</td><td>ANC CONSTITUENCY FUND</td><td>166</td><td>31</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P32072</td><td>ANDERSON AND KERR ENGINEERING</td><td>23</td><td>48</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P57702</td><td>ANGLOGOLD ERGO 1</td><td>1</td><td>38</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20752</td><td>APL CARTONS</td><td>39</td><td>29</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P21932</td><td>ARBOR ACRES SOUTH AFRICA PTY LTD</td><td>25</td><td>27</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P26702</td><td>Architectural Hardware cc</td><td>49</td><td>36</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P31382</td><td>ASSA ABLOY SA PTY LTD</td><td>60</td><td>51</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P33172</td><td>ATLANTIS FOUNDRIES</td><td>57</td><td>122</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P49562</td><td>ATLAS ORGANIESE MISSTOWWE</td><td>62</td><td>88</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P35492</td><td>BASIL READ HOLDINGS PTY LTD</td><td>99</td><td>126</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P27142</td><td>BCX - TELKOM (RA Policies ONLY)</td><td>38</td><td>18</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P77842</td><td>BEAUFORT WEST MUNICIPALITY</td><td>152</td><td>143</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71972</td><td>BEEFCOR</td><td>48</td><td>96</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72752</td><td>BERGRIVER MUNICIPALITY</td><td>85</td><td>88</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P33122</td><td>BLASTING AND EXCAVATING PTY LTD</td><td>39</td><td>40</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20522</td><td>BLOEDSTREET SUPERSPAR</td><td>51</td><td>82</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71742</td><td>BLOEM WATER</td><td>301</td><td>213</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71022</td><td>BLUE CRANE ROUTE MUNICIPALITY</td><td>695</td><td>823</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P42252</td><td>BOJANALA PLAT DISTR MUNICIPALITY</td><td>120</td><td>84</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P39202</td><td>Border Technikon (Walter Sisulu University)</td><td>234</td><td>172</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P41912</td><td>BRAKPAN BUS COMPANY PTY LTD</td><td>36</td><td>56</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P75562</td><td>BREEDE VALLEI MUNICIPALITY</td><td>320</td><td>392</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P75952</td><td>BREEDERIVER WINELANDS MUNICIPALIT</td><td>283</td><td>352</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P41372</td><td>BRIDGE WHOLESALE BOXER TRADE</td><td>10</td><td>18</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20922</td><td>BRIGHT IDEA PROJECTS</td><td>65</td><td>72</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73382</td><td>BUFFALO CITY COLLEGE</td><td>5</td><td>51</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72602</td><td>BUFFALO CITY COUNCIL</td><td>5491</td><td>5441</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72422</td><td>CACADU DISTRICT MUNICIPALITY</td><td>350</td><td>248</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P23472</td><td>CAPE AGULHAS MUNICIPALITY</td><td>103</td><td>105</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72522</td><td>CAPE PENINSULA UNIVERSITY OF TECHNOLOGY</td><td>488</td><td>133</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20942</td><td>CAPE TENNIS COURT CONTRACTORS</td><td>53</td><td>29</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P42812</td><td>CAPRICORN DISTRICT MUNICIPALITY</td><td>3</td><td>11</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P27572</td><td>CHEMSTOF PTY LTD</td><td>37</td><td>5</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71282</td><td>CHRIS HANI DISTRICT COUNCIL - AL</td><td>875</td><td>520</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P49352</td><td>CIS VEREENIGING PTY LTD</td><td>106</td><td>103</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73152</td><td>CITY OF JOHANNESBURG</td><td>115</td><td>96</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73252</td><td>CITY OF MATLOSANA - KLERKSDORP MUNICIPALITY</td><td>1891</td><td>2206</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P21572</td><td>COCA COLA SHANDUKA</td><td>70</td><td>36</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P30442</td><td>CROWN CHICKENS PTY LTD</td><td>325</td><td>220</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P35082</td><td>CONSOLIDATED WIRE INDUSTRIES LTD</td><td>208</td><td>235</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P36182</td><td>Continental Tyres SA (Pty) Ltd</td><td>1206</td><td>967</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P49912</td><td>MALUTI A PHOFUNG WATER</td><td>297</td><td>304</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P26202</td><td>CTP CARTON AND LABELS Industria</td><td>3</td><td>12</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P52092</td><td>DELMAS COLLIERIES</td><td>1</td><td>2</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71352</td><td>DENEL - ORDNANCE PMP</td><td>20</td><td>62</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72492</td><td>DIKGATLONG MUNICIPALITY</td><td>228</td><td>268</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P49882</td><td>DOCTOR KENNETH KAUNDA DISTRICT MUNICIPALITY</td><td>80</td><td>50</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P41512</td><td>DR BEYERS NAUDE LOCAL MUNICIPALITY (BAVIAANS)</td><td>66</td><td>98</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73362</td><td>DR BEYERS NAUDE LOCAL MUNICPALITY (Camdeboo)</td><td>344</td><td>627</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P76232</td><td>DR BEYERS NAUDE LOCAL MUNICPALITY (IKWEZI)</td><td>122</td><td>191</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70522</td><td>DR RUTH SEGOMOTSI MONPATI DISTRICT MUNICIPALITY</td><td>138</td><td>55</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71632</td><td>DRAKENSTEIN MUNICIPALITY</td><td>817</td><td>940</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P34212</td><td>EDEN DISTRICT MUNICIPALITY</td><td>139</td><td>41</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20742</td><td>ELUNDINI LOCAL MUNICIPALITY</td><td>380</td><td>213</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73962</td><td>EMADLANGENI MUNICIPALITY</td><td>46</td><td>25</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70922</td><td>EMAKAZENI LOCAL MUNICIPALITY</td><td>203</td><td>162</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P79302</td><td>EMALAHLENI ~ DORDRECHT COUNCIL</td><td>488</td><td>338</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P44522</td><td>EMFULENI METROPOLITAN TOWN COUNCI</td><td>917</td><td>1241</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71672</td><td>ENDUMENI MUNICIPALITY</td><td>248</td><td>363</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P79642</td><td>Enoch Mgijima Local Municipality (INKWANCA)</td><td>177</td><td>368</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P22902</td><td>Enoch Mgijima Local Municipality (TSOLWANA)</td><td>115</td><td>138</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70752</td><td>FRANCES BAARD DISTR MUNICIPALITY</td><td>49</td><td>49</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71492</td><td>Gamagara Local Municipality Kathu</td><td>464</td><td>309</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71882</td><td>GA-SEGONYANA MUNICIPALITY</td><td>48</td><td>17</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72512</td><td>GEORGE MUNICIPALITY</td><td>606</td><td>712</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20932</td><td>GKD BUISMET</td><td>82</td><td>25</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P30542</td><td>GOLDEN ARROW BUS SERVICES PTY LTD</td><td>1148</td><td>1231</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P42852</td><td>Great Kei Municipality (Komga Municipality)</td><td>98</td><td>108</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P45612</td><td>GREATER LETABA TLC DUIWELSKLOOF</td><td>125</td><td>92</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P47412</td><td>HARRY GWALA DISTRICT MUNICIPALITY</td><td>776</td><td>592</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71862</td><td>Hessequa Municipality</td><td>128</td><td>164</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P39082</td><td>HI TECH AUTOMOTIVE</td><td>160</td><td>122</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P21582</td><td>HIGHVELD BOTTLING NIGEL</td><td>36</td><td>45</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P33682</td><td>HIGHVELD BOTTLING WITBANK</td><td>33</td><td>189</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P25112</td><td>HLUMISA CONSTRUCTION T/A SBT BUILDING</td><td>111</td><td>59</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P23112</td><td>IKHWEZI BUS SERVICE</td><td>62</td><td>36</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P45042</td><td>ILEMBE DISTRICT MUNICIPALITY</td><td>615</td><td>644</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P32542</td><td>ILLOVO SUGAR - NOODSBERG</td><td>32</td><td>47</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P31032</td><td>ILLOVO SUGAR - PONGOLA</td><td>33</td><td>38</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P49942</td><td>IMATU - GAUTENG</td><td>840</td><td>556</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72632</td><td>IMATU - KRUGERSDORP</td><td>574</td><td>715</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P27422</td><td>IMATU - MAKHADO MUNICIPALITY</td><td>107</td><td>144</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P42462</td><td>IMATU - POLOKWANE</td><td>74</td><td>95</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71562</td><td>IMATU ~ EAST LONDON</td><td>28</td><td>42</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70952</td><td>IMATU ~ NELSPRUIT</td><td>115</td><td>156</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P79652</td><td>IMATU ~ STELLENBOSCH</td><td>515</td><td>391</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P38122</td><td>INFRASET</td><td>479</td><td>610</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70782</td><td>INXUBA YETHEMBA MUNICIPALITY</td><td>341</td><td>253</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P22292</td><td>JOE MOROLONG LOCAL MUNICIPALITY</td><td>217</td><td>70</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P43812</td><td>JOZINI MUNICIPALITY</td><td>154</td><td>152</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20232</td><td>KAGISANONG LOCAL MUNICIPALITY</td><td>71</td><td>73</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72932</td><td>KAI GARIB MUNICIPALITY</td><td>554</td><td>305</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70332</td><td>KANNALAND MUNICIPALITEIT</td><td>78</td><td>68</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P32872</td><td>KAT LEISURE PTY LTD</td><td>100</td><td>87</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72542</td><td>KGALAGADI DISTRICT MUNICIPALITY - JOHN TAOLO GAETSEWE</td><td>170</td><td>116</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P22272</td><td>KGATELOPELE MUNICIPALITY</td><td>187</td><td>118</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P45622</td><td>KGETLENG RIVER LOCAL MUNICIPALITY</td><td>40</td><td>235</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20122</td><td>KHAI-MA MUNICIPALITY POFADDER</td><td>17</td><td>16</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P34752</td><td>KIMBERLEY ENGINEERING WORKS</td><td>8</td><td>16</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P25702</td><td>KING RECRUITMENT SOLUTIONS</td><td>200</td><td>324</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72192</td><td>KING SABATA DALINYEBO MUNICIPALITY</td><td>2040</td><td>1650</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73582</td><td>KNYSNA MUNICIPALITY</td><td>473</td><td>355</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P51912</td><td>KOORNFONTEIN MINES PTY LTD</td><td>277</td><td>197</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70772</td><td>KOUGA MUNICIPALITY</td><td>923</td><td>1281</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72332</td><td>KOU-KAMMA LOCAL MUNICIPALITY</td><td>196</td><td>192</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P24932</td><td>KZN LEGISLATURE</td><td>161</td><td>95</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P38432</td><td>LEAR PRODUCTS</td><td>265</td><td>280</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20402</td><td>LEJWELEPUTSWA DISTRICT MUNICIPALITY</td><td>109</td><td>68</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P49672</td><td>LEPHALALE MUNICIPALITY</td><td>102</td><td>91</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P79562</td><td>LETSEMENG MUNICIPALITY</td><td>297</td><td>588</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20952</td><td>LION MATCH PRODUCTS</td><td>166</td><td>207</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P22062</td><td>MAKANA SECURITY t/a HI-TEC SECURITY</td><td>219</td><td>132</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73032</td><td>MAKANA MUNICIPALITY</td><td>596</td><td>665</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P76262</td><td>MAFIKENG LOCAL MUNICIPALITY</td><td>297</td><td>359</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20472</td><td>MAMUSA LOCAL MUNICIPALITY</td><td>200</td><td>127</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72992</td><td>MANDENI MUNICIPALITY</td><td>148</td><td>128</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P79582</td><td>MANTSOPA LOCAL MUNICIPALITY</td><td>323</td><td>345</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73122</td><td>MAQUASSI HILLS MUNICIPALITY</td><td>252</td><td>298</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P26442</td><td>Marley Pipe System SA</td><td>113</td><td>121</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P79352</td><td>MATATIELE LOCAL MUNICIPALITY</td><td>352</td><td>466</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72612</td><td>MATJHABENG MUNICIPALITY - WELKOM</td><td>1224</td><td>934</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P51982</td><td>MATLA COAL LTD</td><td>25</td><td>85</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P32232</td><td>MAYIBUYE TRANSPORT CORPORATION</td><td>233</td><td>237</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P27082</td><td>MBHASHE LOCAL MUNICIPALITY</td><td>201</td><td>44</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P43382</td><td>MBIZANA MUNICIPALITY</td><td>1127</td><td>642</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P49872</td><td>MBOMBELA LOCAL MUNICIPALITY</td><td>406</td><td>258</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P43092</td><td>MHLONTLO MUNICIPALITY</td><td>219</td><td>169</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P79202</td><td>MICHAELHOUSE SCHOOL</td><td>113</td><td>127</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P46012</td><td>MIDLANDS SADDLE AND TROUT RESORT</td><td>74</td><td>46</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P49792</td><td>MKHAMBATHINI MUNICIPALITY</td><td>65</td><td>50</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73512</td><td>MKHONDO MUNICIPALITY</td><td>829</td><td>482</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P46192</td><td>MODIMOLLE MUNICIPALITY</td><td>84</td><td>24</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P49112</td><td>MOHOKARE MUNICIPALITY</td><td>543</td><td>522</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P47592</td><td>Moses Kotane Municipality</td><td>405</td><td>269</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P76252</td><td>MPOFANA MUNICIPALITY</td><td>123</td><td>109</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P49892</td><td>MPUMALANGA TOURISM AND PARKS AGENCY</td><td>95</td><td>128</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P43232</td><td>MSINGA MUNICIPALITY</td><td>184</td><td>55</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70412</td><td>MSUKALIGWA MUNICIPALITY</td><td>372</td><td>299</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71072</td><td>MSUNDUZI MUNICIPALITY</td><td>2004</td><td>1791</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P45772</td><td>MTHONJANENI MUNICIPALITY</td><td>143</td><td>99</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20182</td><td>MTUBATUBA MUNICIPALITY</td><td>105</td><td>88</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P45632</td><td>MUSINA MUNICIPALITY</td><td>267</td><td>178</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P24332</td><td>MW WHEELS SA (PTY)LTD</td><td>451</td><td>347</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73552</td><td>NALA MUNICIPALITY</td><td>467</td><td>528</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73712</td><td>NEWCASTLE LOCAL COUNCIL</td><td>1892</td><td>1839</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P40732</td><td>NGQUSHWA MUNICIPALITY</td><td>258</td><td>182</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P41442</td><td>NGWATHE MUN - PARYS</td><td>253</td><td>128</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P25512</td><td>NKANDLA LOCAL MUNICIPALITY</td><td>88</td><td>53</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P49822</td><td>NKOMAZI MUNICIPALITY</td><td>205</td><td>170</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70632</td><td>NONGOMA MUNICIPALITY</td><td>314</td><td>340</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20130</td><td>NORTH WEST PROVINCIAL LEGISLATURE</td><td>136</td><td>87</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P43242</td><td>NQUTU MUNICIPALITY</td><td>303</td><td>253</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P41942</td><td>NTABANKULU LOCAL MUNICIPALITY</td><td>342</td><td>135</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P25942</td><td>NYANDENI MUNICIPALITY</td><td>357</td><td>156</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P45712</td><td>OKHAHLAMBA LOCAL MUNICIPALITY</td><td>321</td><td>267</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P51872</td><td>OPTIMUM COLLIERY PULLENSHOPE</td><td>2</td><td>10</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P31312</td><td>ORANJE-RIET WATERGEBRUIK</td><td>186</td><td>168</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P44112</td><td>OUDTSHOORN MUNICIPALITY</td><td>381</td><td>396</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P33332</td><td>P and R CONSTRUCTION</td><td>5</td><td>23</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P87642</td><td>PARLIAMENT OF SOUTH AFRICA</td><td>584</td><td>391</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P27032</td><td>Performing Arts Centre of the Free State</td><td>14</td><td>7</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73232</td><td>PHOKWANE MUNICIPALITY</td><td>712</td><td>587</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72802</td><td>PHUMELELA LOCAL MUNICIPALITY</td><td>489</td><td>510</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P79332</td><td>PORT ST JOHNS MUNICIPALITY</td><td>614</td><td>321</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P48592</td><td>Pro Proof Steel Merchants</td><td>376</td><td>423</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72642</td><td>Ramotshere Moiloa Local Municipality (ZEERUST)</td><td>156</td><td>80</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70972</td><td>RANDFONTEIN LOCAL MUNICIPALITY</td><td>236</td><td>384</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73072</td><td>Ray Nkonyeni Municipality (HIBISCUS COAST)</td><td>2917</td><td>2232</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P78122</td><td>Raymond Mhlaba Local Municipality (NKONKOBE)</td><td>652</td><td>762</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72762</td><td>Raymond Mhlaba Local Municipality (NXUBA)</td><td>268</td><td>374</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P26342</td><td>RCL FOODS - NOLA RANDFONTEIN</td><td>309</td><td>40</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P37562</td><td>REHAU POLYMER</td><td>138</td><td>25</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71302</td><td>RICHMOND TOWN COUNCIL</td><td>150</td><td>217</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P25592</td><td>ROLFE LABORATORIES</td><td>194</td><td>64</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P35562</td><td>ROYAL BAFOKENG ~ ADMINISTRATION</td><td>42</td><td>117</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73222</td><td>RUSTENBURG LOCAL MUNICIPALITY</td><td>966</td><td>925</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P83942</td><td>S A NATIONAL DEFENCE FORCE</td><td>19887</td><td>22772</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P32282</td><td>SAFCOL - BLYDE SAWMILLS</td><td>250</td><td>26</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P79272</td><td>SAKHISIZWE MUNICIPALITY</td><td>165</td><td>184</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72412</td><td>SALDANHA MUNICIPALITY</td><td>728</td><td>498</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P34892</td><td>SAMANCOR - CHROME MONTROSE MINE</td><td>900</td><td>394</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70272</td><td>SAMWU ~ POLOKWANE</td><td>453</td><td>436</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P21592</td><td>SCHAEFFLER SOUTH AFRICA PTY LTD</td><td>325</td><td>93</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P25362</td><td>SEA HARVEST CORPORATION PTY LTD</td><td>764</td><td>398</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73652</td><td>SEDIBENG DISTRICT MUNICIPALITY</td><td>169</td><td>333</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P78152</td><td>SEDIBENG WATER ~ BOTHAVILLE</td><td>257</td><td>160</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P78112</td><td>SETSOTO MUNICIPALITY</td><td>548</td><td>758</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73132</td><td>SIYANCUMA MUNICIPALITY</td><td>330</td><td>233</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P20352</td><td>SIYATHEMBA MUNICIPALITY</td><td>203</td><td>184</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72202</td><td>SOL PLAATJE MUNICIPALITY</td><td>2330</td><td>3330</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70002</td><td>SWELLENDAM MUNICIPALITY</td><td>98</td><td>124</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P45532</td><td>Tenneco Automotive</td><td>944</td><td>592</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72242</td><td>THABA CHWEU MUNICIPALITY</td><td>13</td><td>51</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70132</td><td>TLOKWE CITY COUNCIL (POTCHEFSTROOM)</td><td>358</td><td>371</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P59992</td><td>TRANSHEX MINING LTD</td><td>25</td><td>264</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P32732</td><td>TREATED TIMBER PRODUCTS PTY LTD</td><td>112</td><td>83</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72742</td><td>TSANTSABANE MUNICIPALITY</td><td>551</td><td>254</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P25612</td><td>TSWELOPELE MUNICIPALITY</td><td>169</td><td>15</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P74122</td><td>UGU DISTRICT MUNICIPALITY</td><td>1727</td><td>1101</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P41872</td><td>ULUNDI MUNICIPALITY</td><td>432</td><td>461</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71782</td><td>UMHLATHUZE MUNICIPALITY</td><td>1941</td><td>2095</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P73262</td><td>UMLALAZI MUNICIPALITY</td><td>112</td><td>126</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P79512</td><td>UMSOBOMVU MUNICIPALITY</td><td>448</td><td>462</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70242</td><td>UMVOTI MUNICIPALITY</td><td>314</td><td>192</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P40852</td><td>UMZIMKULU MUNICIPALITY 1</td><td>694</td><td>376</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P40592</td><td>UMZINYATHI REGIONAL COUNCIL</td><td>159</td><td>112</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P43882</td><td>UMZUMBE MUNICIPALITY</td><td>304</td><td>222</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70962</td><td>UNIVERSITY - DURBAN WESTVILLE</td><td>17</td><td>66</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P81712</td><td>UNIVERSITY - NORTH WEST</td><td>82</td><td>106</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P71382</td><td>UNIVERSITY ~ FORTE HARE</td><td>771</td><td>481</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72692</td><td>UNIVERSITY ~ RHODES</td><td>529</td><td>397</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P70402</td><td>UNIVERSITY ~ TRANSKEI</td><td>1079</td><td>1121</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P81532</td><td>UNIVERSITY ~ ZULULAND SALARIES</td><td>78</td><td>146</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P45542</td><td>UNIVERSITY OF VENDA</td><td>227</td><td>126</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P49272</td><td>UTHUKELA WATER</td><td>22</td><td>204</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P59972</td><td>VAMETCO MINERALS CORPORATION</td><td>6</td><td>92</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P43852</td><td>VHEMBE DISTRICT MUNICIPALITY</td><td>740</td><td>751</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P72872</td><td>VICTOR KHANYE MUNICIPALITY (DELMAS)</td><td>157</td><td>152</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P48592</td><td>Pro Proof Steel Merchants</td><td>376</td><td>423</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P27642</td><td>WALTER SISULU LOCAL MUNICIPALITY</td><td>884</td><td>296</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P35892</td><td>WOODLANDS DAIRY PTY LTD</td><td>826</td><td>596</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P75852</td><td>WESTONAREA STADSRAAD</td><td>408</td><td>407</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P76092</td><td>WITZENBERG MUNICIPALITY</td><td>158</td><td>155</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P22202</td><td>ZIBO CONTAINERS PTY LTD</td><td>236</td><td>340</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+<tr><td>AL1P52032</td><td>ZULULAND ANTHRACITE COLLERIES</td><td>20</td><td>52</td><td><span class="badge badge-sto">STO Mandate + Payslip</span></td></tr>
+</tbody></table></div>
+
+  <h2 class="section-title">Section 3 — DO Collection (Worksite Restricted) <span style="font-size:0.8rem;font-family:sans-serif;color:var(--muted);">(81 facilities)</span></h2>
+  <p style="color:var(--muted);font-size:0.88rem;margin-bottom:12px;">Debit order collection only. Stop order is not available at these facilities. Mostly Western Cape farms, wine estates, restaurants and small businesses.</p>
+  <div class="table-wrap">
+    <table id="table-do" class="abna-table">
+      <thead><tr><th>Facility Code</th><th>Facility Name</th><th>Collection Method</th></tr></thead>
+      <tbody>
+<tr><td>AL1P25202</td><td>WS Da Lie Roy Building Suppliers</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22082</td><td>WS A.A WASTE</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P20972</td><td>WS ABALONE GUEST LODGE</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P24582</td><td>WS ABSA PAARL-VALLEI PLAAS</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P27932</td><td>WS Advanced Galvanising</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P28592</td><td>WS AIRIN TECHNOLOGIES (PTY) LTD</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22152</td><td>WS BAKE IT EASY</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P24572</td><td>WS BON COURAGE ESTATE</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21242</td><td>WS DAG WILLEMS TREE SURGERY AND FORESTRY</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21122</td><td>WS DALEWOOD FARM</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22711</td><td>WS DELAIRE (PTY)LTD</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P25892</td><td>WS DONKERBOS LANDGOED</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22452</td><td>WS EAC TANNERY t/a MIDLAND TANNERY</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21462</td><td>WS EIKERIVIER LANDGOED</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22382</td><td>WS ERFKAMP</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22472</td><td>WS FARMPROPS 53</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21162</td><td>WS FD HUGO BOERDERY</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P20871</td><td>WS FISAASBOS PLASE</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22552</td><td>WS HENTIES JUICES</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21042</td><td>WS PROMANAGE PTY LTD</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22122</td><td>WS VILJOEN AND SEUNS BOERDERY</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P24852</td><td>WS KUNJE</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21142</td><td>WS SANTA LUCIA TRUST</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P26962</td><td>WS GHV VERPAKKING</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22852</td><td>WS E DE V BRINK & SEUNS EDMS T/A PANORAMA</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P23153</td><td>WS ATLANTIC BEACH GOLF ESTATE</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22432</td><td>WS ATLANTIC BEACH HOME OWNERS</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P27051</td><td>WS CALEDON VALLEY NURSERY (PTY) LTD</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P27101</td><td>WS CERES CASCADE FARMS</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P25362</td><td>WS SEA HARVEST CORPORATION PTY LTD - WEEKLY</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P23522</td><td>WS RIJKS COUNTRY HOUSE</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21451</td><td>WS TOKARA</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22232</td><td>WS WATERKLOOF</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21881</td><td>WS S.JORDAAN BOERDERY</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P24201</td><td>WS MULDERBOSCH</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22951</td><td>WS MEERENDAL</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P26842</td><td>WS BOSCHENDAL (PTY) LTD</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22301</td><td>WS GROEN GOUD LANDGOED</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21921</td><td>WS MODDERASVLEI BELEGGINGS TRUST</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21941</td><td>WS GLENAVON FARM</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P24742</td><td>WS Boland Grondverskuiwing TA Weltevrede</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P26302</td><td>WS BURGERSHOF WYNE BK</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22821</td><td>WS VERSOEK</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P27981</td><td>WS ZORGVLIET WINES (Pty) LTD</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21731</td><td>WS OLYVENBOOM BOERDERY</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P27481</td><td>WS VILJOENSDRIFT</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22571</td><td>WS JS JORDAAN BOERDERY EDMS BPK T/A DE NONNA</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P25731</td><td>WS EP BLIGNAUT</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22581</td><td>WS JHJ Boerdery PTY LTD TA Royal Mushrooms</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P24271</td><td>WS JJ DE VILLIERS LANDGOED T/A MORGENSTER BOERDERY</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21541</td><td>WS BERGSOOM BOERDERY (Pty) Ltd</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P29121</td><td>WS EXCELSIOR FARM</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P25871</td><td>WS NR PARKFELT TRADING AS LA CHATAIGNE WINES</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P27961</td><td>WS LANGRIVIER</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21821</td><td>WS MC FISH TRADERS (Pty Ltd)</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P24922</td><td>WS DE KOCK BOERDERY</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P28311</td><td>WS DE VLEI BOERDERY (Edms) Bpk</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22841</td><td>WS JF LE ROUX BOERDERY T/A BROODKRAAL</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21701</td><td>WS MOOIHOEK PLAAS</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P25751</td><td>WS MORESON FARM</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21081</td><td>WS MORGENSTER LANDGOED</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P24831</td><td>WS HAVANA HILLS CELLAR CC</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P26391</td><td>WS LA PETITE FERME CC</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21381</td><td>WS DA CAPO VINEYARDS</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P24891</td><td>WS LEMBERG WINE ESTATE</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P24771</td><td>WS MONTPELLIER</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P25031</td><td>WS NELSONS CREEK</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P23071</td><td>WS NEIL ELLIS WINES (PTY) LTD</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P25151</td><td>WS KEERMONT VINEYARD</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21951</td><td>WS DEETLEFS WINES PTY LTD</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P21831</td><td>WS LONGRIDGE WINES</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P24751</td><td>WS L'AVENIR</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P23941</td><td>WS DE MORGENZON</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P20801</td><td>WS Laerskool Noord - Eind</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22081</td><td>WS OK GROCER LINDEY</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P22352</td><td>WS STONEYS TYRES CC</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P25211</td><td>WS Business Venture Investments T/A Prominent Tulips</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P27821</td><td>WS ROBUSTA WHOLESALE GROWERS</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P24571</td><td>WS BON COURAGE ESTATE</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P26721</td><td>WS Clorpique 220 Pty Ltd trading as Mcdonalds</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+<tr><td>AL1P26821</td><td>WS MONTE VIDEO</td><td><span class="badge badge-do">Debit Order Only</span></td></tr>
+</tbody></table></div>
+
+</div><!-- end page -->
+
+<footer>
+  Team Buffalos — ABNA Worksite List &nbsp;|&nbsp; Internal Use Only &nbsp;|&nbsp; 2026 Edition<br>
+  <span style="font-size:0.75rem;">Source: Sanlam ABNA register. Always verify current status with your manager before approaching a new worksite.</span>
+</footer>
+
+<script>
+// Count stats
+document.addEventListener('DOMContentLoaded', function() {
+  var qlink = document.querySelectorAll('#table-qlink tbody tr').length;
+  var sto = document.querySelectorAll('#table-sto tbody tr').length;
+  var doR = document.querySelectorAll('#table-do tbody tr').length;
+  document.getElementById('count-qlink').textContent = qlink;
+  document.getElementById('count-sto').textContent = sto;
+  document.getElementById('count-do').textContent = doR;
+  document.getElementById('count-total').textContent = qlink + sto + doR;
+});
+
+function filterTable() {
+  var input = document.getElementById('searchInput').value.toLowerCase();
+  var tables = document.querySelectorAll('.abna-table');
+  var total = 0;
+  var shown = 0;
+  tables.forEach(function(table) {
+    var rows = table.querySelectorAll('tbody tr');
+    rows.forEach(function(row) {
+      total++;
+      var text = row.textContent.toLowerCase();
+      if (text.indexOf(input) > -1) {
+        row.classList.remove('hidden');
+        shown++;
+      } else {
+        row.classList.add('hidden');
+      }
+    });
+  });
+  var display = document.getElementById('count-display');
+  if (input) {
+    display.textContent = 'Showing ' + shown + ' of ' + total + ' facilities';
+  } else {
+    display.textContent = '';
+  }
+}
+</script>
+</body>
+</html>
